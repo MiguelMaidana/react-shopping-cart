@@ -2,18 +2,42 @@ import React,{useState} from 'react';
 import data from "./data.json"
 import Products from './components/Products';
 import Filter from './components/Filter';
+import Cart from './components/Cart';
 
 const  App=()=> {
 
   const [products,setProducts] = useState(data.products)
   const[size,setSize] = useState("")
   const [sort,setSort] = useState("")
+  const [cartItems,setcartItems]  = useState([])
 
   const productoOriginal =()=>{
     const original = data.products
     return original
   }
+
+  const removeFromCart=(product)=>{
+    const cardItem = [...cartItems]
+    //console.log(cardItem)
+   const nuevoCard =  cardItem.filter(x=>x._id !== product._id)
+   setcartItems(nuevoCard)
+   //console.log(nuevoCard)
+  }
   
+  const addToCart = (product) =>{
+    const cardItem = [...cartItems]
+    let alreadyInCart = false
+    cardItem.forEach(item=>{
+      if(item._id === product._id){
+        item.count++
+        alreadyInCart = true
+      }
+    })
+    if(!alreadyInCart){
+      cardItem.push({...product,count : 1})
+    }
+    setcartItems(cardItem)
+  }
 
    const sortProducts=(event)=>{
     //impl
@@ -81,10 +105,13 @@ const  App=()=> {
             />
             <Products
               products={products}
+              addToCart={addToCart}
             ></Products>
           </div>
           <div className="sidebar">
-            Carts Item
+            <Cart cartItems={cartItems}
+            removeFromCart={removeFromCart}
+            />
           </div>
         </div>
       </main>
