@@ -3,6 +3,8 @@ import data from "./data.json"
 import Products from './components/Products';
 import Filter from './components/Filter';
 import Cart from './components/Cart';
+import store from "./store"
+import { Provider } from 'react-redux';
 
 const  App=()=> {
 
@@ -10,6 +12,9 @@ const  App=()=> {
   const[size,setSize] = useState("")
   const [sort,setSort] = useState("")
   const [cartItems,setcartItems]  = useState(localStorage.getItem("cartItem")? JSON.parse(localStorage.getItem("cartItem")):[])
+
+
+
 
   const productoOriginal =()=>{
     const original = data.products
@@ -97,6 +102,8 @@ const  App=()=> {
   }
 
   return (
+    <Provider store={store}>
+      
     <div className="grid-container">
       <header>
         <a href="/">React Shopping Cart</a>
@@ -129,6 +136,8 @@ const  App=()=> {
         Todos los derechos reservados
       </footer>
     </div>
+    </Provider>
+    
   );
 }
 
