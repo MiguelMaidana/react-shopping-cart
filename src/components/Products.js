@@ -1,12 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import formarCurrency from "./util"
 import Fade from "react-reveal/Fade" 
 import Modal from "react-modal"
 import Zoom from "react-reveal/Zoom"
+//import { connect } from 'react-redux';
+import {fetchProducts} from "../actions/productActions"
+import {useSelector,useDispatch} from "react-redux"
 
-const Products = ({products,addToCart}) => {
-    //console.log(products)
+const Products = ({addToCart}) => {
+
+    const dispatch = useDispatch()
+  
+    const data = useSelector(data=>{
+        //console.log("Dentro de useSelector")
+        //console.log(data.products.items)
+        const products = data.products.items
+        return products
+    })
+   // console.log("Quiero ver que tiene products",products)
     const [producto,setProduct] = useState(null)
+    
+
+    
+
+    
+    useEffect(()=>{
+        //console.log("quiero ejecutar el fetch")
+        dispatch(fetchProducts())
+      
+        
+    },[dispatch])
+
+  
     
     const openModal =(product)=>{
         setProduct(product)
@@ -18,8 +43,11 @@ const Products = ({products,addToCart}) => {
     return ( 
         <div>
             <Fade bottom  cascade>
-            <ul className="products">
-                {products.map(product =>(
+                {
+                    !data ? (<div>Loading...</div>):
+                    (
+                    <ul className="products">
+                {data.map(product =>(
                     <li key={product._id}>
                     <div className="product">
                         <a href={"#" + product._id} onClick={()=>openModal(product)}>
@@ -42,6 +70,9 @@ const Products = ({products,addToCart}) => {
                 ))}
 
             </ul>
+                    )
+                }
+            
             </Fade>
             {
                 producto &&
